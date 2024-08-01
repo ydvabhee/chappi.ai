@@ -29,6 +29,23 @@ export const createRagContext = async (contextData : string) => {
     },
   })
 
+  return data 
+}
+
+export const queryRagContext = async (query : string, contextId : string) => {
+
+  const { data } = await api.post('rag/context/query/', {
+    "query": query,
+    "context_id":contextId
+  },
+  {
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+      
+    },
+  })
+
   return data
 }
 

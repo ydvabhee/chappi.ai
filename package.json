@@ -15,9 +15,12 @@
   },
   "type": "module",
   "dependencies": {
+    "@lottiefiles/dotlottie-react": "^0.8.5",
+    "axios": "^1.7.2",
     "react": "^18.2.0",
     "react-chatbotify": "^2.0.0-beta.3",
     "react-dom": "^18.2.0",
+    "react-spinners": "^0.14.1",
     "vite-plugin-css-injected-by-js": "^3.1.1",
     "webextension-polyfill": "^0.10.0"
   },

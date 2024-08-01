@@ -1,12 +1,10 @@
 import React , { useState, useEffect } from 'react';
 import '@pages/panel/Panel.css';
-import ChatBot from "react-chatbotify";
 import { createRagContext } from "../../../utils/api/index"
-import Options from '../options/Options';
+import ChatBotScreen from './ChatbBotScreen';
+import { PacmanLoader } from 'react-spinners';
 
 
-const PRIMARYCOLOR = "#026496"
-const SECONDARYCOLOR = "#026496"
 
 
 
@@ -34,46 +32,56 @@ const [currentTab, setCurrentTab] = useState<CurrentTabStateType>({
 	innerText: undefined
 });
 
-const [form, setForm] = React.useState<any>({});
-const [flowState, setFlowState] = React.useState<any>({});
-	const formStyle = {
-		marginTop: 10,
-		marginLeft: 20,
-		border: "1px solid #491d8d",
-		padding: 10,
-		borderRadius: 5,
-		maxWidth: 300
-	}
+
+const [questions, setQuestions] = useState<any[]>([]);
+const [contextId, setContextId] = useState<string | undefined>(undefined);
+const [isError, setIsError] = useState(false);
+const [isLoading, setIsLoading] = useState(false);
+
+
+
 
 	async function getCurrentTab() {
-    let queryOptions = { active: true, lastFocusedWindow: true };
-    // `tab` will either be a `tabs.Tab` instance or `undefined`.
-    let [tab] = await chrome.tabs.query(queryOptions);
-    return tab;
+		try {
+			let queryOptions = { active: true, lastFocusedWindow: true };
+			let [tab] = await chrome.tabs.query(queryOptions);
+			return tab;
+		}  catch (error) {
+			setIsError(true)
+			console.error(error)
+		}
   }
 
 
 	
-function get_document() {
-
+function get_document_body() {
   return document.body.innerText
 }
-	useEffect(() => {
-		getCurrentTab().then((tab) => {
-			console.log("title >> ", tab?.title)
-			console.log("url >> ", tab?.url)
-			console.log("id >> ", tab?.id)
-			console.log("windowId >> ", tab?.windowId)
 
-			if(tab?.id){
-			
-				chrome.scripting.executeScript({
-      target : {tabId : tab?.id},
-      func : get_document,
-    })
-    .then(injectionResults => {
-			// console.log("injectionResults >> ", injectionResults);
-      for (const {frameId, result} of injectionResults) {
+const getTabBodyInnerText = async(tab: chrome.tabs.Tab) => {
+
+	if(!tab?.id) return 
+
+	const	injectionResults = await chrome.scripting.executeScript({
+		target : {tabId : tab?.id},
+		func : get_document_body,
+	})
+	return injectionResults
+}
+
+const getCurrentTabData = async() => {
+	try {
+		const tab = await getCurrentTab();
+		// console.log("title >> ", tab?.title)
+		// console.log("url >> ", tab?.url)
+		// console.log("id >> ", tab?.id)
+		// console.log("windowId >> ", tab?.windowId)
+
+		if(tab?.id){
+		const	injectionResults = await getTabBodyInnerText(tab)
+		
+		if (injectionResults !== undefined) {
+			for (const {result} of injectionResults) {
         // console.log(`Frame ${frameId} result:`, result);
 				setCurrentTab({
 					tab: tab?.id,
@@ -83,115 +91,109 @@ function get_document() {
 					windowId: tab?.windowId,
 					innerText: result
 				})	
-
-				setFlowState({
-					...flowState,
-					start: {
-						message: "Hi I am Chappi, How may I help you?",
-						options : async() => {
-							const resp = await createRagContext(result)
-							return resp.questions
-						},
-						path: "loop"
-					},
-					loop: {
-						path: "loop",
-						message: "How may I help you?",
-
-					}
-				})
-      }
-		}); }}).catch((error: any) => console.error(error));
-
-	}, [])
+			
+			}
+		}
+		}
+	} catch (error) {
+		setIsError(true)
+		console.error(error) }
+}
 
 
+	const createContext = async() => {
+		try {
 
-	const createContext = async () => {
-		if(currentTab.innerText){
-			console.log("tetx >> ", currentTab.innerText)
-			const result = await createRagContext(currentTab.innerText)
-			console.log("result >> ", result)
-		}}
+			setIsLoading(true)
+			if(!currentTab.innerText) {
+				new Error("No content to create context")
+				return
+			}
+			const result = await createRagContext(currentTab.innerText);
+			setQuestions(result.questions)
+			setContextId(result.id)
+		 
+			setIsLoading(false)
+		} catch (error) {
+			setIsError(true)
+			setIsLoading(false)
+			console.error(error)
+		}
+	}
 
-	useEffect(() => {
-		
-		// createContext()
+
+	const getAndUpdateContextData = async(tab: chrome.tabs.Tab) => { 
+		try {
+			const	injectionResults = await getTabBodyInnerText(tab)
+			if (injectionResults !== undefined) {
+				for (const {result} of injectionResults) {
+					// console.log(`Frame ${frameId} result:`, result);
+					console.log(result)
+				
+				}
+			}
+		} catch (error) {
+			console.error(error)
+		}
+	}
+
+	useEffect(() => { 
+
+		chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+			if (changeInfo.status === 'complete' && tab.active) {
+				console.log('Tab URL changed or reloaded:', tab.url);
+				// Perform actions based on the new tab content
+				getAndUpdateContextData(tab)
+				
+				
+			}
+		});
+
+		getCurrentTabData()
+
+	},[])
+
+
+	useEffect(() => { 
+		createContext()
 	},[currentTab.innerText])
 
 
+	 
+
+	if(isError){
+		return (
+			<>
+				<div className='flex flex-col justify-center h-screen items-center p-5'>
+					<h1 className='text-9xl font-bold'>404</h1>
+					<h2 className='text-2xl font-bold'>NO CONTEXT DATA</h2>
+					 
+					<div className="bg-gray-100 p-4 rounded-md shadow-md mt-4">
+  				<p className="text-gray-700">
+    <strong>Note : </strong> 
+     Please ensure to open this extension in a tab where there is relevant data available. This will allow the extension to create the necessary context.
+  </p>
+</div>
+
+				</div>
+			</>
+		)
+	}
+
+	if(isLoading){
+		return (
+			<div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
+				<div>
+
+			<PacmanLoader  color='#026496' />
+				</div>
+			</div>
+		)
+	}
 
   return (
      <>
-		 <ChatBot {...{
-			"settings" : {
-				"isOpen" : true,
-				"general" : {
-					"embedded": true,
-					"primaryColor":PRIMARYCOLOR,
-					"secondaryColor":SECONDARYCOLOR,
-					// "actionDisabledIcon" : "",
-					"fontFamily": "Poppins",
-					showHeader: false,
-					 
-					"showFooter": true,
-				},
-				"notification" : {
-					"disabled" : true
-				},
-				"header" : {
-					"title" : "Context : " + currentTab?.title,
-					"showAvatar": false,
-					"avatar" : "https://ik.imagekit.io/egmym9cit/image%201.png?updatedAt=1722344560309",
-				}, 
-				"footer" : {
-					"text" : "Powered by GROQ",
-				},
-				"voice" : {
-					disabled: true
-				}, "fileAttachment" : {
-					"accept" : "pdf",
-					"sendFileName" : true,
-					"disabled" : false
-				}, "emoji" : {
-					"disabled" : true
-				},
-				chatHistory: {storageKey: "example_basic_form"}
-
-			},
-			"styles":{
-
-				 "chatWindowStyle": {
-					"width" : "100vw",
-					"height" :"100vh"
-				 },
-				 "chatInputAreaStyle" : {
-					"height" : "auto",
-					"maxHeight" : "100%",  
-				 },
-				 "chatInputAreaFocusedStyle" : {
-					"outline" : "none",
-					"boxShadow" : "none"
-				 }, 
-				 "sendButtonStyle" : {
-			
-					"borderRadius" : "100%",
-					"width" : "40px",
-					"height" : "40px",
-					"padding" : "10px",
-					"transition": "all 0.1s ease-in-out"
-
-				 },
-				 "sendButtonHoveredStyle":{
-					"borderRadius" : "100%",
-					"width" : "40px",
-					"height" : "40px",
-					"padding" : "8px",
-					"transition": "all 0.1s ease-in-out"
-				 }
-			},
-			
-			flow: flowState
-		}} /></>
+		 <ChatBotScreen questions={questions} contextId={ contextId ? contextId : ''}/>
+		 </>
   );
 }

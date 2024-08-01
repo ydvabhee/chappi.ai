@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <style>
+    .container {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .circle-1 {
+      width: 100px;
+      height: 100px;
+      border-radius: 100%;
+      /* border: 1px solid black; */
+      position: relative;
+      background-color: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .circle-2 {
+      width: 80px;
+      height: 80px;
+      /* border: 1px solid black; */
+      border-radius: 100%;
+      background-color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .triangle {
+      width: 0;
+      height: 0;
+      border-radius: 100%;
+      border-top: 50px solid transparent;
+      border-left: 50px solid transparent;
+      border-right: 50px solid transparent;
+      border-bottom: 100px solid black;
+      position: absolute;
+      transition: all 0.5s;
+      animation: rotate 1s linear infinite;
+      z-index: 1;
+    }
+
+    @keyframes rotate {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      50% {
+        transform: rotate(180deg);
+      }
+
+      100% {  
+        transform: rotate(360deg);
+      }
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="circle-1">
+      <div class="triangle">
+      </div>
+      <div class="circle-2">
+        text
+      </div>
+    </div>
+  </div>
+</body>
+</html>
