@@ -1,6 +1,8 @@
 import React , { useState, useEffect } from 'react';
 import '@pages/panel/Panel.css';
 import ChatBot from "react-chatbotify";
+import { createRagContext } from "../../../utils/api/index"
+import Options from '../options/Options';
 
 
 const PRIMARYCOLOR = "#026496"
@@ -18,7 +20,7 @@ type CurrentTabStateType = {
 }
 
 
-	
+ 
 
 
 export default function Panel(): JSX.Element {
@@ -84,10 +86,18 @@ function get_document() {
 
 				setFlowState({
 					...flowState,
-				 	start: {
-						message: `Hello there! Now I have context of this page "${tab?.title}".  Can you tell me your name?`,
-						function: (params:any) => setForm({...form, name: params.userInput}),
-						path: "ask_age"
+					start: {
+						message: "Hi I am Chappi, How may I help you?",
+						options : async() => {
+							const resp = await createRagContext(result)
+							return resp.questions
+						},
+						path: "loop"
+					},
+					loop: {
+						path: "loop",
+						message: "How may I help you?",
+
 					}
 				})
       }
@@ -96,9 +106,18 @@ function get_document() {
 	}, [])
 
 
+
+	const createContext = async () => {
+		if(currentTab.innerText){
+			console.log("tetx >> ", currentTab.innerText)
+			const result = await createRagContext(currentTab.innerText)
+			console.log("result >> ", result)
+		}}
+
 	useEffect(() => {
-		console.log("currentTab >> ", currentTab);
-	},[currentTab])
+		
+		// createContext()
+	},[currentTab.innerText])
 
 
 
@@ -171,6 +190,7 @@ function get_document() {
 					"transition": "all 0.1s ease-in-out"
 				 }
 			},
+			
 			flow: flowState
 		}} /></>
   );
