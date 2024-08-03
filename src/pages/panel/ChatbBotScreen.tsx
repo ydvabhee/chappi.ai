@@ -31,17 +31,6 @@ type ChatBotScreenProps = {
 export default function ChatBotScreen({questions, contextId} : ChatBotScreenProps): JSX.Element {
 
 
-
-  const [currentTab, setCurrentTab] = useState<CurrentTabStateType>({
-    tab: undefined,
-    title: undefined,
-    url: undefined,
-    id: undefined,
-    windowId: undefined,
-    innerText: undefined
-  });
-
-
   const flow:Flow = {
     start: {
       message : "Hi, I am Chappi, your webpage assistant. How can I help you?",
@@ -57,9 +46,25 @@ export default function ChatBotScreen({questions, contextId} : ChatBotScreenProp
       path : "loop"
     },
     loop: {
-      message : async(param : Params) => {
-        const result  = await queryRagContext(param.userInput, contextId)
-        return result.answer
+      message : async(params : Params) => {
+      let text = "";
+      const result  = await queryRagContext(params.userInput, contextId)
+			let offset = 0;
+			for await (const chunk of result) {
+
+        console.log("chunk >>> ",chunk)
+				const chunkText = chunk;
+				text += chunkText;
+				// inner for-loop used to visually stream messages character-by-character
+				// feel free to remove this loop if you are alright with visually chunky streams
+				for (let i = offset; i < chunkText.length; i++) {
+          await params.streamMessage(text);
+          await new Promise(resolve => setTimeout(resolve, 30));
+        }
+			}
+
+			await params.streamMessage(text);
+			
       },
       path : "loop"
     }
@@ -109,9 +114,9 @@ const settings = {
   }, "emoji": {
     "disabled": true
   },
-  "chatHistory": { storageKey: "example_basic_form" }
+  "chatHistory": { storageKey: "example_basic_form" },
 
-
+  botBubble: {simStream: true}
 }
 
 const styles = {

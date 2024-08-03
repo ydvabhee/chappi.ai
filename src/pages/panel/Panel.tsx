@@ -82,7 +82,7 @@ const getCurrentTabData = async() => {
 		
 		if (injectionResults !== undefined) {
 			for (const {result} of injectionResults) {
-        // console.log(`Frame ${frameId} result:`, result);
+        console.log(` result:`, result);
 				setCurrentTab({
 					tab: tab?.id,
 					title: tab?.title,
@@ -97,7 +97,7 @@ const getCurrentTabData = async() => {
 		}
 	} catch (error) {
 		setIsError(true)
-		console.error(error) }
+		console.info(error) }
 }
 
 
@@ -128,7 +128,7 @@ const getCurrentTabData = async() => {
 			if (injectionResults !== undefined) {
 				for (const {result} of injectionResults) {
 					// console.log(`Frame ${frameId} result:`, result);
-					console.log(result)
+					console.log("currentTab context data >> ",result)
 				
 				}
 			}
@@ -140,13 +140,18 @@ const getCurrentTabData = async() => {
 	useEffect(() => { 
 
 		chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-			if (changeInfo.status === 'complete' && tab.active) {
-				console.log('Tab URL changed or reloaded:', tab.url);
-				// Perform actions based on the new tab content
-				getAndUpdateContextData(tab)
-				
-				
+			try {
+				if (changeInfo.status === 'complete' && tab.active) {
+					// console.log('Tab URL changed or reloaded:', tab.url);
+					// Perform actions based on the new tab content
+					// get context data from selected tab only
+					if(tab.id === currentTab.id)
+					{getAndUpdateContextData(tab)}
+				}
+			} catch(e) {
+				console.error(e)
 			}
+			
 		});
 
 		getCurrentTabData()

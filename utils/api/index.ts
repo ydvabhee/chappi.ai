@@ -39,10 +39,9 @@ export const queryRagContext = async (query : string, contextId : string) => {
     "context_id":contextId
   },
   {
+    responseType: 'stream',
     headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-      
+      'Content-Type': 'application/json',      
     },
   })
 
