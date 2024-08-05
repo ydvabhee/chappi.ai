@@ -58,22 +58,12 @@ To get started with Chappi AI, follow these steps:
 
 4. **Run the application:**
     ```bash
-    npm start
-    # or
-    python app.py
+    npm run dev
     ```
-
-## Usage
-
-Once the application is running, you can access it at `http://localhost:3000` (or the configured port). Here's how you can interact with the application:
-
-- **Step 1:** [Instructions]
-- **Step 2:** [Instructions]
-- **Step 3:** [Instructions]
 
 ## Demo
 
-Check out our [Demo Video]([https://link-to-demo.com](https://jam.dev/c/0cd2670f-0ae9-4f9c-950b-29a1adf97937)) to see Chappi AI in action!
+Check out our [Demo Video](https://jam.dev/c/0cd2670f-0ae9-4f9c-950b-29a1adf97937) to see Chappi AI in action!
 
 
 Please make sure to update tests as appropriate.
