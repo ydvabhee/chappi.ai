@@ -73,20 +73,8 @@ Once the application is running, you can access it at `http://localhost:3000` (o
 
 ## Demo
 
-Check out our [Demo Video](https://link-to-demo.com) to see Chappi AI in action!
+Check out our [Demo Video]([https://link-to-demo.com](https://jam.dev/c/0cd2670f-0ae9-4f9c-950b-29a1adf97937)) to see Chappi AI in action!
 
-![Chappi AI Demo](https://link-to-demo-image.com/demo.gif)
-
-## Contributing
-
-We welcome contributions to Chappi AI! If you're interested in contributing, please follow these steps:
-
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-branch`).
-3. Make your changes.
-4. Commit your changes (`git commit -m 'Add some feature'`).
-5. Push to the branch (`git push origin feature-branch`).
-6. Open a Pull Request.
 
 Please make sure to update tests as appropriate.
 
