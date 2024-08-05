@@ -10,9 +10,7 @@ Chappi.ai is your intelligent browser companion that turns any active webpage in
 - [Tech Stack](#tech-stack)
 - [Features](#features)
 - [Installation](#installation)
-- [Usage](#usage)
 - [Demo](#demo)
-- [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
 
@@ -30,7 +28,7 @@ Key functionalities include:
 Chappi AI is built using the following technologies:
 
 - **Frontend**: [React.js]
-- **Backend**: [Fastapi] Repo: ![Link](https://github.com/ydvabhee/chappi_backend)
+- **Backend**: [Fastapi] Repo: [Link](https://github.com/ydvabhee/chappi_backend)
 - **AI/ML Frameworks**: [Llama / Langchain / Qdrant / Hugginface]
 - **Containerization**: [Docker]
 
