@@ -18,11 +18,6 @@ Chappi.ai is your intelligent browser companion that turns any active webpage in
 
 **Chappi AI** is an advanced AI-powered application designed to [brief description of the core functionality]. The project focuses on [mention the specific domain or use-case it addresses] and is built with scalability, flexibility, and performance in mind.
 
-Key functionalities include:
-- [Feature 1]
-- [Feature 2]
-- [Feature 3]
-
 ## Tech Stack
 
 Chappi AI is built using the following technologies:
@@ -63,8 +58,6 @@ To get started with Chappi AI, follow these steps:
 
 Check out our [Demo Video](https://jam.dev/c/0cd2670f-0ae9-4f9c-950b-29a1adf97937) to see Chappi AI in action!
 
-
-Please make sure to update tests as appropriate.
 
 ## License
 
