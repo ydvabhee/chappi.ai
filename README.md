@@ -2,7 +2,7 @@
 
 # Chappi AI
 
-Welcome to **Chappi AI**! Chappi.ai is your intelligent browser companion that turns any active webpage into an interactive experience. With Chappi.ai, you can effortlessly extract context from the page you're viewing and ask questions directly about its content. Whether you're researching, shopping, or simply browsing, Chappi.ai provides instant, relevant answers to help you navigate and understand the information you need, right when you need it. Simplify your online experience with Chappi.ai—your personal guide through the web.
+Chappi.ai is your intelligent browser companion that turns any active webpage into an interactive experience. With Chappi.ai, you can effortlessly extract context from the page you're viewing and ask questions directly about its content. Whether you're researching, shopping, or simply browsing, Chappi.ai provides instant, relevant answers to help you navigate and understand the information you need, right when you need it. Simplify your online experience with Chappi.ai—your personal guide through the web.
 
 ## Table of Contents
 
@@ -29,12 +29,10 @@ Key functionalities include:
 
 Chappi AI is built using the following technologies:
 
-- **Frontend**: [React.js / Angular / Vue.js / Other]
-- **Backend**: [Node.js / Django / Flask / Express.js / Other]
-- **AI/ML Frameworks**: [TensorFlow / PyTorch / scikit-learn / Other]
-- **Database**: [PostgreSQL / MongoDB / MySQL / Redis / Other]
-- **Cloud Services**: [AWS / Google Cloud / Azure / Other]
-- **Containerization**: [Docker / Kubernetes / Other]
+- **Frontend**: [React.js]
+- **Backend**: [Fastapi] Repo: ![Link](https://github.com/ydvabhee/chappi_backend)
+- **AI/ML Frameworks**: [Llama / Langchain / Qdrant / Hugginface]
+- **Containerization**: [Docker]
 
 ## Features
 
@@ -55,12 +53,8 @@ To get started with Chappi AI, follow these steps:
 2. **Install dependencies:**
     ```bash
     npm install
-    # or
-    pip install -r requirements.txt
     ```
 
-3. **Set up environment variables:**
-    - Create a `.env` file in the root directory and add your configuration settings.
 
 4. **Run the application:**
     ```bash
